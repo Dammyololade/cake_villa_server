@@ -33,5 +33,9 @@ export const rules = {
                 return paid > 0;}).withMessage("Kindly put amount paid"),
                 ],
 
+         createfavourite: [
+            check("cake_id").not().isEmpty().withMessage("This field must not be empty"),
+            check("user_id").not().isEmpty().withMessage("This field must not be empty"),  
+                 ],
                 
 }

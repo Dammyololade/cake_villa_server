@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json({limit: "5mb"}));
 
 app.get('/', (req, res) => {
-  res.send('Welcome to the landing page of Cake Villa!!! ');
+  res.send('Welcome to the landing page of Cake Home & Event Villa!!! ');
 });
 
 (async () => {

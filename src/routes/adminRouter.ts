@@ -6,6 +6,7 @@ import {Registration} from "../model/Registration";
 import {rules} from "../rules/Rule";
 import {Response} from "../helper/Response";
 import { CakeCreateModel, Cakes } from "../model/Cakes";
+import { Favourite } from "../model/Favourite";
 
  const response = new Response();
 
@@ -75,4 +76,15 @@ import { CakeCreateModel, Cakes } from "../model/Cakes";
        }
    });
 
+     adminRouter.get("/favourite", async (req: express.Request, res: express.Response)=> {
+      try{ 
+      const result = await Cakes.max("cake_id");
+       return res.json(response.success(result));    
+  
+      }
+       catch(err){
+      sentry.captureException(err);
+      return  res.status(400).json(response.error(err, "oops an error has occured"));
+     }
+      });
   

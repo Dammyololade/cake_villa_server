@@ -1,5 +1,5 @@
 
-import {Column, Table, Model, CreatedAt, UpdatedAt} from "sequelize-typescript";
+import {Column, Table, Model, CreatedAt, UpdatedAt, DataType} from "sequelize-typescript";
 
 
 @Table({
@@ -20,8 +20,8 @@ export class Cakes extends Model <Cakes> {
     @Column
     public price: number;
 
-    @Column
-   public image: string;
+    @Column(DataType.TEXT)
+    public image: string;
 
     @CreatedAt
     @Column
