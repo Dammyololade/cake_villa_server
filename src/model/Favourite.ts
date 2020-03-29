@@ -1,9 +1,8 @@
 import {Column, Model, Table, UpdatedAt, CreatedAt, BelongsTo} from "sequelize-typescript";
-import { Cakes } from "./Cakes";
-import { Order } from "./Order";
+import { User } from "./User";
 
 Table({
-    tableName: "favourite",
+    tableName: "favourites",
 })
 
 export class Favourite extends Model <Favourite> {
@@ -15,21 +14,19 @@ export class Favourite extends Model <Favourite> {
 
  @CreatedAt
  @Column
- createdOn! : Date;
+ created_on! : Date;
 
  @UpdatedAt
  @Column
- updatedOn! : Date;
+ updated_o! : Date;
 
- @BelongsTo(() => Cakes, "cake_id")
-    public cake : Cakes;
-
-    @BelongsTo(() => Order, "user_id")
-    public order : Order;
+ 
+    @BelongsTo(() => User, "user_id")
+    public user : User;
 
    }
 
-export interface createFavouriteModel{
+export interface FavouriteInterface{
     cake_id : string;
-    user_id: string
-}
+    user_id: number
+    }

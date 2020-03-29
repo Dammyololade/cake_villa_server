@@ -1,8 +1,8 @@
 
-import { Column, Table , Model, UpdatedAt, CreatedAt} from "sequelize-typescript";
+import { Column, Table , Model, UpdatedAt, CreatedAt, BelongsTo} from "sequelize-typescript";
 
 @Table({
-    tableName: "order",
+    tableName: "orders",
 })
 
 export class Order extends Model<Order>{
@@ -26,14 +26,15 @@ export class Order extends Model<Order>{
 
 @CreatedAt
 @Column
-public createdOn!: Date;
+public created_on!: Date;
 
 @UpdatedAt
 @Column
-public updatedOn!: Date; 
+public updated_on!: Date; 
+
  }
 
- export interface orderCreateModel{
+ export interface OrderInterface {
      user_id: string;
      cake_id: string;
      status : string;

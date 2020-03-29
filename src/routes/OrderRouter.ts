@@ -4,19 +4,21 @@ import * as sentry from "@sentry/node";
 import {Sequelize} from "Sequelize-typescript";
 import {Response} from "../helper/Response";
 import {rules} from "../rules/Rule";
-import {Cakes} from "../model/Cakes";
+import {Cake} from "../model/Cake";
 import {Ordernumber} from "../rules/Ordernumber";
-import { Order, orderCreateModel, OrderStatus } from "../model/Order";
-
+import { Order, OrderInterface, OrderStatus } from "../model/Order";
+import {NotificationDirector} from "../helper/NotificationDirector";
+import {User, UserInterface, LoginInterface, ResetpasswordInterface} from "../model/User";
 
 
 const response = new Response();
 const ordernumber = new Ordernumber();
+const notificationDirector = new NotificationDirector();
 
 export const orderRouter = express.Router();  
 
 orderRouter.get("/", async (req: express.Request, res:express.Response)=>{
-      const result = await Cakes.findAll()
+      const result = await Cake.findAll()
       res.json(response.success(result));
 
 });
@@ -27,13 +29,16 @@ orderRouter.post("/", rules.createorder, async (req: express.Request, res: expre
     if(!error.isEmpty()){
         return res.status(422).json(response.error({error: error.array()}, "Wrong Input"));
         }
-         const payload = req.body as orderCreateModel;
+         const payload = req.body as OrderInterface;
           payload.status = OrderStatus.Pending;  
           payload.order_number = await ordernumber.generateOrderNumber();
           payload.created_date = new Date();                 
-          const order = new Order(payload);
+          let order = new Order(payload);
            const result = await order.save(); 
-           return  res.json(response.success(result));              
+           notificationDirector.setTopic(NotificationDirector.ADMIN_TOPIC)
+           .setNotification(`Order ${payload.order_number}`, "You have an order")
+            .sendToTopic();
+           return  res.json(response.success({message: result}));              
              }
              catch(err){
                 sentry.captureException(err);

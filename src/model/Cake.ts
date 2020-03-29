@@ -6,13 +6,10 @@ import {Column, Table, Model, CreatedAt, UpdatedAt, DataType} from "sequelize-ty
    tableName: "cakes",
 })
 
-export class Cakes extends Model <Cakes> {
+export class Cake extends Model <Cake> {
 
 @Column
    public name: string;
-
-   @Column
-   public cake_id: string;
     
     @Column
    public size: string;
@@ -25,17 +22,16 @@ export class Cakes extends Model <Cakes> {
 
     @CreatedAt
     @Column
-    public createdOn!: Date;
+    public created_on!: Date;
 
     @UpdatedAt
     @Column
-    public updatedOn!: Date;
+    public updated_on!: Date;
     
      }
 
-     export interface CakeCreateModel{
+     export interface CakeInterface{
          name: string;
-         cake_id: string;
          size: string;
          price: number;
          image: string;

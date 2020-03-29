@@ -2,10 +2,10 @@ import * as express from "express";
 import {validationResult} from "express-validator";
 import * as sentry from "@sentry/node";
 import {Sequelize} from "Sequelize-typescript";
-import {Registration} from "../model/Registration";
+import {User} from "../model/User";
 import {rules} from "../rules/Rule";
 import {Response} from "../helper/Response";
-import { CakeCreateModel, Cakes } from "../model/Cakes";
+import { CakeInterface, Cake } from "../model/Cake";
 import { Favourite } from "../model/Favourite";
 
  const response = new Response();
@@ -14,7 +14,7 @@ import { Favourite } from "../model/Favourite";
 
   adminRouter.get("/", async (req: express.Request, res: express.Response) => {
       try{
-    const regis = await Registration.findAll();
+    const regis = await User.findAll();
       return res.json(response.success(regis));
       }
       catch(err){
@@ -33,7 +33,7 @@ import { Favourite } from "../model/Favourite";
                 response.error({error: error.array()}, "Invalid Id")
             )
         }
-        const result = await Registration.findByPk(req.params.id);
+        const result = await User.findByPk(req.params.id);
         return res.json(response.success(result));
       }
       catch(err){
@@ -44,7 +44,7 @@ import { Favourite } from "../model/Favourite";
 
     adminRouter.get("/count", async (req: express.Request, res: express.Response) => {
         try{
-           const rcount = await Registration.findAndCountAll();
+           const rcount = await User.findAndCountAll();
             const result = rcount.count;
             res.json(response.success(result));
         }
@@ -59,13 +59,13 @@ import { Favourite } from "../model/Favourite";
          const error = validationResult(req);
           if(!error.isEmpty()){
               return res.status(422).json(
-                response.error({error: error.array()}, "Invalid Inout")
+                response.error({error: error.array()}, "Invalid Input")
               )
           }
-         const payload = req.body as CakeCreateModel;
+         const payload = req.body as CakeInterface;
          const image1 = req.body.image.filename
              payload.image = image1
-          const cakes = new Cakes(payload);
+          const cakes = new Cake(payload);
            const result = await cakes.save() 
            return res.json(response.success(result));    
   
@@ -78,8 +78,8 @@ import { Favourite } from "../model/Favourite";
 
      adminRouter.get("/favourite", async (req: express.Request, res: express.Response)=> {
       try{ 
-      const result = await Cakes.max("cake_id");
-       return res.json(response.success(result));    
+         const result = await Favourite.findAll();
+        return res.json(response.success(result));
   
       }
        catch(err){

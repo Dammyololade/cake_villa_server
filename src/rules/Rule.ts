@@ -37,5 +37,10 @@ export const rules = {
             check("cake_id").not().isEmpty().withMessage("This field must not be empty"),
             check("user_id").not().isEmpty().withMessage("This field must not be empty"),  
                  ],
+
+         createMessage: [
+             check("user_id").not().isEmpty().withMessage("This field must not be empty"),
+             check("message").not().isEmpty().withMessage("This field must not be empty"),  
+                 ],     
                 
 }
