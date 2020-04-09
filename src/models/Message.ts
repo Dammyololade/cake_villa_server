@@ -1,7 +1,7 @@
 import {Column, Table, Model, BelongsTo, CreatedAt, UpdatedAt} from "sequelize-typescript";
 import { User } from "./User";
 
-Table({
+@Table({
     tableName: "messages",
 })
 
@@ -18,8 +18,6 @@ created_on! : Date;
 @UpdatedAt
 updateted_on! : Date
 
-@BelongsTo(() => User, "user_id")
-public user: User;
 
 }
 

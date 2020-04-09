@@ -25,21 +25,21 @@ app.get('/', (req, res) => {
 });
 
 (async () => {
-   /* try {
-        await sequelize.authenticate();
+    try {
+      await sequelize.authenticate();
         console.info("Sequelize is Up and Runing.. Move on....");
     } catch (e) {
-        console.error("Sequelize failed to start up", e);
-    }*/
-
-    await sequelize.sync({force: false, alter: true}).then((val) => {
+        console.error("Sequelize failed to start up", e);}
+    
+ /*
+   await sequelize.sync({force: false, alter: true}).then((val) => {
         console.log("success sync sequelize");
     }).catch((err) => {
         console.error("SEQUELIZE: Error occurs", err);
-    });
-
+    }); 
+ */
    
     createServer(app).listen(port, () => {
         return console.info(`server started at http://localhost:${port}`);
     });
-})();
+  });

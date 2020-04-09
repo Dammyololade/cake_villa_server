@@ -1,4 +1,5 @@
-import { Column, Table , Model, UpdatedAt, CreatedAt,Default, AllowNull} from "sequelize-typescript";
+import { Column, Table , Model, UpdatedAt, CreatedAt,Default, HasOne, AllowNull} from "sequelize-typescript";
+import {Wallet} from "./Wallet";
 
 @Table({
     tableName: "users",
@@ -12,11 +13,11 @@ export class User extends Model <User> {
     @Column
     public email: string;
 
-    @Column
-    public user_id: number;
-
     @Column 
     public phone: string;
+
+    @Column
+    public admin: boolean;
 
     @Column
     public password: string
@@ -28,11 +29,14 @@ export class User extends Model <User> {
 
     @CreatedAt
     @Column
-    public createdOn!: Date;
+    public created_on!: Date;
 
     @UpdatedAt
     @Column
-    public updatedOn!: Date;
+    public updated_on!: Date;
+
+    @HasOne(() => Wallet, "user_id")
+    public wallet?: Wallet;
  
     }
 
@@ -40,7 +44,7 @@ export class User extends Model <User> {
       fullname: string;
       email: string;
       phone: string;
-    
+      admin: boolean;
       password: string;
       push_token: string
     }
@@ -50,8 +54,15 @@ export class User extends Model <User> {
       password: string
     }
 
-     export interface ResetpasswordInterface{
+     export interface ResetPasswordInterface{
        email : string;
        newpassword: string;
        retype_password : string
+      }
+
+      export  interface ChangePasswordInterface{
+        email: string;
+        oldpassword: string;
+        newpassword: string;
+        confirmpassword: string
       }

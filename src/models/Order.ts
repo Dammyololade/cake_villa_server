@@ -1,22 +1,31 @@
 
-import { Column, Table , Model, UpdatedAt, CreatedAt, BelongsTo} from "sequelize-typescript";
+import { Column, Table , Model, UpdatedAt, CreatedAt, ForeignKey, BelongsTo} from "sequelize-typescript";
+import {User} from "../models/User";
 
 @Table({
     tableName: "orders",
 })
 
 export class Order extends Model<Order>{
- @Column
- user_id: string;
+
+@ForeignKey(() => User)
+@Column
+user_id: number;
 
  @Column
- cake_id: string;
+ cake_id: number;
 
  @Column
  status: string;
 
  @Column
+ order_number: string;
+
+ @Column
  paid: boolean;
+
+ @Column
+ amount: number;
 
  @Column
  delivery_date: Date;
@@ -30,7 +39,10 @@ public created_on!: Date;
 
 @UpdatedAt
 @Column
-public updated_on!: Date; 
+public updated_on!: Date;
+
+//@BelongsTo(() => User, "user_id")
+    public user: User;
 
  }
 
@@ -38,15 +50,14 @@ public updated_on!: Date;
      user_id: string;
      cake_id: string;
      status : string;
-     paid: number;
+     paid: boolean;
+     amount: number;
      order_number: string;
-     delivery_date: Date;
-     created_date: Date;
- }
+     }
 
  export enum OrderStatus {
     Pending = "pending",
     Processing = "processing",
     Completed = "completed",
-    Declined = "declined",
+     Declined = "declined",
  }

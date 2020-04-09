@@ -1,18 +1,18 @@
 import * as express from "express";
-import {validationResult} from "express-validator";
+import {validationResult, Result} from "express-validator";
 import * as sentry from "@sentry/node";
 import {Sequelize} from "Sequelize-typescript";
-import {User} from "../model/User";
+import {User} from "../models/User";
 import {rules} from "../rules/Rule";
 import {Response} from "../helper/Response";
-import { CakeInterface, Cake } from "../model/Cake";
-import { Favourite } from "../model/Favourite";
+import { CakeInterface, Cake } from "../models/Cake";
+import { Favourite } from "../models/Favourite";
 
  const response = new Response();
 
- export const adminRouter = express.Router();
+ export const AdminRouter = express.Router();
 
-  adminRouter.get("/", async (req: express.Request, res: express.Response) => {
+  AdminRouter.get("/", async (req: express.Request, res: express.Response) => {
       try{
     const regis = await User.findAll();
       return res.json(response.success(regis));
@@ -25,10 +25,10 @@ import { Favourite } from "../model/Favourite";
     
     
 
-  adminRouter.get("/:id", async (req: express.Request, res: express.Response) => {
+  AdminRouter.get("/:id", async (req: express.Request, res: express.Response) => {
       try{
        const error = validationResult(req.params);
-        if(error.isEmpty()){
+        if(!error.isEmpty()){
             return res.status(422).json(
                 response.error({error: error.array()}, "Invalid Id")
             )
@@ -42,19 +42,8 @@ import { Favourite } from "../model/Favourite";
       }
   });
 
-    adminRouter.get("/count", async (req: express.Request, res: express.Response) => {
-        try{
-           const rcount = await User.findAndCountAll();
-            const result = rcount.count;
-            res.json(response.success(result));
-        }
-        catch(err){
-            sentry.captureException(err);
-        return  res.status(400).json(response.error(err, "oops an error has occured"));
-        }
-    });
-
-   adminRouter.post("/upload", rules.createcake, async (req: express.Request, res: express.Response) =>{
+   
+   AdminRouter.post("/upload", rules.createcake, async (req: express.Request, res: express.Response) =>{
        try{
          const error = validationResult(req);
           if(!error.isEmpty()){
@@ -63,9 +52,7 @@ import { Favourite } from "../model/Favourite";
               )
           }
          const payload = req.body as CakeInterface;
-         const image1 = req.body.image.filename
-             payload.image = image1
-          const cakes = new Cake(payload);
+           const cakes = new Cake(payload);
            const result = await cakes.save() 
            return res.json(response.success(result));    
   
@@ -76,15 +63,38 @@ import { Favourite } from "../model/Favourite";
        }
    });
 
-     adminRouter.get("/favourite", async (req: express.Request, res: express.Response)=> {
-      try{ 
-         const result = await Favourite.findAll();
-        return res.json(response.success(result));
-  
+   AdminRouter.get("/cake/:id", async (req: express.Request, res: express.Response) => {
+    try{
+     const error = validationResult(req.params);
+      if(!error.isEmpty()){
+          return res.status(422).json(
+              response.error({error: error.array()}, "Invalid Id")
+          )
       }
+      const result = await Cake.findByPk(req.params.id);
+      return res.json(response.success(result));
+    }
+    catch(err){
+        sentry.captureException(err);
+       return res.status(400).json(response.error(err, "oops an error has occured"));
+    }
+}); 
+
+  AdminRouter.delete("/delete",  async (req: express.Request, res: express.Response)=>{
+       try{
+         const user_id = req.body.user_id;
+           if(user_id === ""){
+            return res.status(422).json(
+              response.error("Invalid Id"));
+           }
+           const result = await User.findByPk(user_id);
+           await result.destroy();
+           return res.json(response.success("successful"));
+       }
        catch(err){
-      sentry.captureException(err);
-      return  res.status(400).json(response.error(err, "oops an error has occured"));
-     }
-      });
-  
+         sentry.captureException(err);
+         return res.json(response.error(err, "oops an error has occured"));
+       }
+       });
+    
+              

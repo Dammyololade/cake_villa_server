@@ -1,5 +1,5 @@
 import * as express from "express";
-import { Order } from "../model/Order";
+import { Order } from "../models/Order";
 
 
 

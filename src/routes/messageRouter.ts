@@ -2,18 +2,19 @@ import * as sentry from "@sentry/node";
 import * as express from "express";
 import {validationResult} from "express-validator";
 import {rules} from "../rules/Rule";
-import {Message, MessageInterface} from "../model/Message";
+import {Message, MessageInterface} from "../models/Message";
 import {Sequelize} from "Sequelize-typescript";
-import {User} from "../model/User";
+import {User} from "../models/User";
 import {Response} from "../helper/Response";
+import {auth} from "../middleware/auth";
 import { NotificationDirector } from "../helper/NotificationDirector";
 
 const response = new Response();
 const notificationDirector = new NotificationDirector();
 
-export const messageRouter = express.Router();
+export const MessageRouter = express.Router();
 
-messageRouter.post("/", rules.createMessage, async (req: express.Request, res: express.Response)=> {
+MessageRouter.post("/", rules.createMessage, async (req: express.Request, res: express.Response)=> {
      try{
    const error = validationResult(req);
    if(!error.isEmpty()){
@@ -39,7 +40,7 @@ messageRouter.post("/", rules.createMessage, async (req: express.Request, res: e
     }
 });
 
-messageRouter.get("/view", async (req: express.Request, res: express.Response)=>{
+MessageRouter.get("/view", auth, async (req: express.Request, res: express.Response)=>{
        try{
     const result = await Message.findAll();
       return res.json(response.success({message: result}));
@@ -50,7 +51,7 @@ messageRouter.get("/view", async (req: express.Request, res: express.Response)=>
        }
 });
 
-messageRouter.get("/:id", async (req: express.Request, res: express.Response)=>{
+MessageRouter.get("/:id", auth, async (req: express.Request, res: express.Response)=>{
     try{
  const result = await Message.findByPk(req.params.id);
    return res.json(response.success({message: result}));

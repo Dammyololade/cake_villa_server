@@ -1,16 +1,22 @@
 import * as express from "express";
-import {userRouter} from "../routes/userRouter";
-import {adminRouter} from "../routes/adminRouter";
-import { orderRouter } from "./OrderRouter";
-import { favouriteRouter } from "./favoriteRouter";
-import { messageRouter } from "./messageRouter";
+import {UserRouter} from "./UserRouter";
+import {AdminRouter} from "./AdminRouter";
+import { OrderRouter } from "./OrderRouter";
+import { FavouritesRouter } from "./FavoritesRouter";
+import { MessageRouter } from "./MessageRouter";
+import {BankRouter} from "./BankRouter";
+//import {walletFundingRouter} from "./WalletFundingRouter";
+
 
 export const register = ( app: express.Application) => {
          
-    app.use("api/admin", adminRouter);
-   app.use("app/user", userRouter);
-   app.use("app/order", orderRouter);
-   app.use("app/favorite", favouriteRouter);
-   app.use("app/message", messageRouter);
+    app.use("/app/admin", AdminRouter);
+   app.use("/app/user", UserRouter);
+   app.use("/app/order", OrderRouter);
+   app.use("/app/favourite", FavouritesRouter);
+   app.use("/app/message", MessageRouter);
+   app.use("/app/bank", BankRouter);
+   //app.use("/app/Fundwallet", walletFundingRouter);
+   
     
 }
